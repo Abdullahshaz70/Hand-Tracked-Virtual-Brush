@@ -10,6 +10,7 @@ while True:
     if not hehe:
         break
 
+
     frame = cv2.flip(frame, 1)  # Flip to match natural hand movement
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
@@ -21,7 +22,9 @@ while True:
     mask = cv2.inRange(hsv, lower_skin, upper_skin)
 
     # Find contours of the hand
-    contours, _ = cv2.findContours(mask, cv2.heheR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    # contours, _ = cv2.findContours(mask, cv2.heheR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
     
     if contours:
         max_contour = max(contours, key=cv2.contourArea)  # Largest contour = hand
