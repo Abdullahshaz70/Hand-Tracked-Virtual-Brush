@@ -15,17 +15,17 @@ while True:
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     # Define range for detecting skin color (adjust if needed)
-    lower_skin = np.array([100, 120, 140], dtype=np.uint8)  # Avoids dark blue (higher V)
-    upper_skin = np.array([110, 255, 200], dtype=np.uint8)  
-    
+    lower_skin = np.array([100, 120, 140], dtype=np.uint8)
+    upper_skin = np.array([110, 255, 200], dtype=np.uint8)
+    # lower_skin = np.array([0, 0, 0], dtype=np.uint8)
+    # upper_skin = np.array([180, 255, 50], dtype=np.uint8)
+
 
     mask = cv2.inRange(hsv, lower_skin, upper_skin)
 
     # Find contours of the hand
-    # contours, _ = cv2.findContours(mask, cv2.heheR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    
     if contours:
         max_contour = max(contours, key=cv2.contourArea)  # Largest contour = hand
         hull = cv2.convexHull(max_contour)  # Convex hull around hand
@@ -40,10 +40,13 @@ while True:
     frame = cv2.addWeighted(frame, 0.5, canvas, 0.5, 0)
 
     # Display output
-    cv2.imshow("Virtual Brush", frame)
+    cv2.imshow("Object Tracking", frame)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('q'):
         break
+    elif key == ord('r'):
+        canvas = np.zeros((480, 640, 3), dtype=np.uint8)  # Clear the canvas
 
 cap.release()
 cv2.destroyAllWindows()
